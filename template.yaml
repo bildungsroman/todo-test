@@ -3,8 +3,8 @@ Transform: AWS::Serverless-2016-10-31
 Description: AWS UGS Todo list
 Globals:
   Function:
-    Runtime: nodejs8.10
-    Timeout: 10
+    Runtime: nodejs12.x
+    Timeout: 100
     MemorySize: 512
 Resources:
   TodoTable:
@@ -89,13 +89,14 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: Prod
-      DefinitionBody: !Transform
+      DefinitionBody:
         Name: AWS::Include
         Parameters:
           Location: !Sub s3://${AWS::AccountId}-sam-deploy-${AWS::Region}/${AWS::StackName}/swagger.yaml
   WebappBucket:
     Type: AWS::S3::Bucket
     Properties:
+      BucketName: !Sub ${AWS::StackName}-webappbucket-${AWS::AccountId}
       WebsiteConfiguration:
         IndexDocument: index.html
   S3BucketPolicy:
